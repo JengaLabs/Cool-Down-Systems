@@ -1,0 +1,11 @@
+The resource / cool down system needs to meet the requirements of:
+A. Contain a float that stores its time left or resourcess left called maxAmount.
+B. Contain another float for amount of resourcess/time left called amountLeft.
+C. Should contain a decrement method that takes an arruegment float that decreases the amount left.
+Should return a booleon of if their is maxAmount can spend that amount. 
+D.Contain a Increment method that takes arruement float to increase amount left.
+Should return a booleon true for when the maxAmount is reached.
+
+First implementation was to use a standard class that acts as the OverFlowPool.
+I call it this because when a pool overflows, it stops filling. And when
+it's empty, it can't keep empting. 
