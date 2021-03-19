@@ -4,14 +4,6 @@ using UnityEngine;
 
 public class AbilityLimitBase
 {
-    #region Notes
-    /*
-     The ability limit base class is a system for keeping program modularity.
-     All cooldowns have a amount left, maxAmount, a method to spend amount, refill amount
-
-    */
-    #endregion
-
     #region Class Properties 
 
 
@@ -25,59 +17,47 @@ public class AbilityLimitBase
 
     #region Methods 
 
-    //Suprisingly both these methods are similer but do the exact opposite of each other. 
-    //Wonderful
+    public bool SmoothDecrementAmount(float decrementAmount)
+    {
+        //Smooth decrement decreases amount with time, used for decrease over time. 
 
-    /// <summary>
-    /// Spends amount and returns true when there is enough to spend.
-    /// </summary>
-    /// <param name="decrementAmount"></param>
-    /// <returns></returns>
+        //take away amount with time
+        AmountLeft -= decrementAmount * Time.deltaTime;
+
+        return AmountLeft >= 0 || SetAsEmpty();
+    }
+
     public bool DecrementAmount(float decrementAmount)
     {
-        /*Spend amount 
-         * if not enough for a spend than set to zero and return false
-         * else spend amount and return true
-        */
+        //Decrement amount instantly for spending resources.
 
-        if (AmountLeft - decrementAmount >= 0)
-        {
-            //if there is enough to spend amount
-            AmountLeft -= decrementAmount * Time.deltaTime;
-            //spend amount
-            return true;
-        }
-        else
-        {
-            //there is not enough to spend
-            AmountLeft = 0;
-            //set amount to zero
-            return false;
+        AmountLeft -= decrementAmount;
 
-        }
+        //check if amount left won't be empy.
+        return AmountLeft >= 0 || SetAsEmpty();
     }
+
+    private bool SetAsEmpty()
+    {
+        AmountLeft = 0;
+        return false;
+    }
+
 
     public bool IncrementAmount(float incrementAmount)
     {
-        /*Refill amount specified
-         * if amount will go over return false and set to max
-         * else increase and return true
-         */
+        //Increment amount instantly
 
-        if (AmountLeft + incrementAmount > maxAmount)
-        {
-            //amount is greater than max
-            AmountLeft = maxAmount;
-            //set amount to max
-            return false;
-        }
-        else
-        {
-            AmountLeft += incrementAmount;
-            //add to amount left
-            return true;
-        }
+        AmountLeft += incrementAmount;
 
+        //check if above max amount
+        return AmountLeft <= maxAmount || SetAsFull();
+    }
+
+    private bool SetAsFull()
+    {
+        AmountLeft = maxAmount;
+        return false;
     }
 
 
